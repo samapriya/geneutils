@@ -32,6 +32,12 @@ cd geneutils
 python setup.py install
 ```
 
+Though there is a conda installer for linux/mac for geneutils
+
+```conda install -c samapriya geneutils```
+
+The recommended way would be to use the conda environment/terminal and then do a ```pip install geneutils```
+
 Installation is an optional step; the application can be also run directly by executing pydrop.py script. The advantage of having it installed is being able to execute porg as any command line tool. I recommend installation within virtual environment. If you don't want to install, browse into the geneutils folder and try ```python geneutils.py -h``` to get to the same result.
 
 ## geneutils cli tools
