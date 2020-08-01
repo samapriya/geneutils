@@ -1,6 +1,7 @@
 # geneutils
 
 [![PyPI version](https://badge.fury.io/py/geneutils.svg)](https://badge.fury.io/py/geneutils)
+![CI geneutils](https://github.com/samapriya/geneutils/workflows/CI%20geneutils/badge.svg)
 
 This tool was originally inspired by the [work here](https://github.com/Gurdhhu/bioinf_scripts) for dealing with nucleotide sequences and more tools will be added as needed. This toolbox requires python 3 and can be installed.
 
