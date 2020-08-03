@@ -9,6 +9,7 @@ This tool was originally inspired by the [work here](https://github.com/Gurdhhu/
 ## Table of contents
 * [Installation](#installation)
 * [geneutils cli tools](#geneutils-cli-tools)
+    * [init](#init)
     * [blasthit](#blasthit)
 
 
@@ -46,6 +47,18 @@ This is a command line tool and it is designed to simply call the tools you need
 
 ![geneutils_main](https://user-images.githubusercontent.com/6677629/89102487-b2d5b200-d3d7-11ea-937e-cd6e661de31c.gif)
 
+### init
+Turns out there are benefits of registering for a NCBI account and to use your email address and your API key. Apart from NCBI having a way of contacting you, the API key raises the rate limit imposed on your queries. From the NCBI account page you can find this information
+
+```
+E-utils users are allowed 3 requests/second without an API key. Create an API key to increase your e-utils limit to 10 requests/second......Only one API Key per user. Replacing or deleting will inactivate the current key. Use this key by passing it with api_key=API_KEY parameter.
+```
+Genrate your API Key
+![ncbi_apikey](https://user-images.githubusercontent.com/6677629/89146736-92663e80-d522-11ea-8295-ff838d1a9918.gif)
+
+The init tool saves your email address and API key to be saved in your local machine which can be used instead of typing out your email over and over again. The API key is a clear entry meaning you cannot see when you type in or paste your API key for safety.
+![ncbi_cred](https://user-images.githubusercontent.com/6677629/89147373-6c419e00-d524-11ea-8043-58f3e9699b5f.gif)
+
 ### blasthit
 This script is intended for taxonomic annotation of **blast** results (blastn, tblastn, blastp or blastx) saved in **Hit Table CSV** format where GenBank accession numbers are in the 4th column. It uses **efetch** function from **Bio.Entrez** package to get information about accessions from **GenBank Nucleotide (Nuccore)** or **Protein** databases.
 The output is an annotated CSV file "*_annotated.csv" with the following columns added:
@@ -56,11 +69,18 @@ The output is an annotated CSV file "*_annotated.csv" with the following columns
 * Reference
 * Date of update
 
-![geneutils_bhits](https://user-images.githubusercontent.com/6677629/89102488-b701cf80-d3d7-11ea-8f1b-b26886563e84.gif)
+![geneutils_bhits](https://user-images.githubusercontent.com/6677629/89148494-ffc89e00-d527-11ea-935b-e7dac3677d47.gif)
 
 | arguments | description |
 | --- | --- |
 | path | Pathway to csv-formatted Hit Table file with blastn results. Positional argument |
 | db | For the output of **nucleotide blast** or **tblastn**, use <code>n</code>. For the output of **protein blast** or **blastx**, use <code>p</code>. Positional argument |
-| email | Your NCBI email. Positional argument |
+| email | Your NCBI email. Optional argument |
 | -h, --help | Show help message and exit. Optional argument |
+
+
+## Changelog
+
+### 0.0.2
+  - Added credential tool to save NCBI email and API Key
+  - Minor fixes to overall functionality.
