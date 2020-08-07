@@ -26,6 +26,19 @@ or you can also try
 
 ```pip install geneutils --user```
 
+
+To upgrade to a new version from old you can try
+
+```
+pip install geneutils --upgrade
+```
+
+or 
+
+```
+pip install geneutils --user --upgrade
+```
+
 or you can also try
 
 ```
