@@ -97,7 +97,7 @@ def accession_parse(path, db, email):
         api_key = None
 
     n = 200
-    open(path.split(".")[0] + "_annotated.csv", "w")
+    open(os.path.basename(path).split(".")[0] + "_annotated.csv", "w")
     with open(path, encoding="utf-8-sig") as csvfile:
         reader = csv.reader(csvfile)
         for row in reader:

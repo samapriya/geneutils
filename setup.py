@@ -3,7 +3,7 @@ from setuptools import find_packages
 
 setup(
     name="geneutils",
-    version="0.0.3",
+    version="0.0.4",
     packages=["geneutils"],
     data_files=[("", ["LICENSE"])],
     url="https://github.com/samapriya/geneutils",

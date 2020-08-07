@@ -33,7 +33,7 @@ To upgrade to a new version from old you can try
 pip install geneutils --upgrade
 ```
 
-or 
+or
 
 ```
 pip install geneutils --user --upgrade
@@ -94,11 +94,14 @@ The output is an annotated CSV file "*_annotated.csv" with the following columns
 
 ## Changelog
 
+### 0.0.4
+  - Fixed issue with path basename
+  
 ### 0.0.3
   - Fixed issue with repeating email id for accession blocks
   - Updated ReadMe to include **geneutils init** as first step.
   - Fixed CSV write issue outside loop
-  
+
 ### 0.0.2
   - Added credential tool to save NCBI email and API Key
   - Minor fixes to overall functionality.
