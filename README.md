@@ -45,16 +45,16 @@ Installation is an optional step; the application can be also run directly by ex
 ## geneutils cli tools
 This is a command line tool and it is designed to simply call the tools you need.
 
-![geneutils_main](https://user-images.githubusercontent.com/6677629/89102487-b2d5b200-d3d7-11ea-937e-cd6e661de31c.gif)
+![geneutils_main](https://user-images.githubusercontent.com/6677629/89606925-3f9cc780-d83f-11ea-9a05-6b1c9a31ff68.gif)
 
 ### init
-Turns out there are benefits of registering for a NCBI account and to use your email address and your API key. Apart from NCBI having a way of contacting you, the API key raises the rate limit imposed on your queries. From the NCBI account page you can find this information
+Turns out there are benefits of registering for a NCBI account and to use your email address and your API key. Apart from NCBI having a way of contacting you, the API key raises the rate limit imposed on your queries. This is a recommended step and a user should not skip thought it is possible to use the blashit tool without the API key.
+*From the NCBI account page you can find this information*
 
-```
-E-utils users are allowed 3 requests/second without an API key. Create an API key to increase your e-utils limit to 10 requests/second......Only one API Key per user. Replacing or deleting will inactivate the current key. Use this key by passing it with api_key=API_KEY parameter.
-```
-Genrate your API Key
-![ncbi_apikey](https://user-images.githubusercontent.com/6677629/89146736-92663e80-d522-11ea-8295-ff838d1a9918.gif)
+**E-utils users are allowed 3 requests/second without an API key. Create an API key to increase your e-utils limit to 10 requests/second......Only one API Key per user. Replacing or deleting will inactivate the current key. Use this key by passing it with api_key=API_KEY parameter.**
+
+Generate your API Key
+![ncbi_apikey](https://user-images.githubusercontent.com/6677629/89606628-67d7f680-d83e-11ea-9c43-328903dcd6b7.gif)
 
 The init tool saves your email address and API key to be saved in your local machine which can be used instead of typing out your email over and over again. The API key is a clear entry meaning you cannot see when you type in or paste your API key for safety.
 ![ncbi_cred](https://user-images.githubusercontent.com/6677629/89147373-6c419e00-d524-11ea-8043-58f3e9699b5f.gif)
@@ -69,7 +69,7 @@ The output is an annotated CSV file "*_annotated.csv" with the following columns
 * Reference
 * Date of update
 
-![geneutils_bhits](https://user-images.githubusercontent.com/6677629/89148494-ffc89e00-d527-11ea-935b-e7dac3677d47.gif)
+![geneutils_bhits](https://user-images.githubusercontent.com/6677629/89607253-0dd83080-d840-11ea-997b-9b69cbb4e8b4.gif)
 
 | arguments | description |
 | --- | --- |

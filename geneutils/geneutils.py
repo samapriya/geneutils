@@ -90,8 +90,11 @@ def accession_parse(path, db, email):
     if os.path.exists(os.path.join(expanduser("~"), "geneauth.json")):
         with open(os.path.join(expanduser("~"), "geneauth.json")) as json_file:
             cred = json.load(json_file)
-        email_id = cred["email"]
-        api_key = cred["api_key"]
+        email_id = cred["email"].strip()
+        api_key = cred["api_key"].strip()
+    else:
+        email_id = None
+        api_key = None
 
     n = 200
     open(path.split(".")[0] + "_annotated.csv", "w")
@@ -105,20 +108,20 @@ def accession_parse(path, db, email):
         for i in range((len(accession_list) + n - 1) // n)
     ]
     i = 1
+    if email is not None:
+        Entrez.email = email
+    elif email is None and email_id is not None:
+        Entrez.email = email_id
+    if api_key != "pass" and api_key is not None:
+        Entrez.api_key = api_key
+    if email is None and email_id is not None and api_key != "pass":
+        print("Using both email and api_key")
+    elif email is not None:
+        print("Using email id {}".format(email))
+    elif email is None and email_id is None:
+        sys.exit("Either pass an email or try geneutils init")
     for subsets in accession_chunk:
         idlist = ",".join(subsets)
-        if email != None:
-            Entrez.email = email
-        elif email is None and len(email_id) > 0:
-            Entrez.email = email_id
-        if api_key != "pass":
-            Entrez.api_key = api_key
-        if email is None and len(email_id) > 0 and api_key != "pass":
-            print("Using both email and api_key")
-        elif email is not None:
-            print("Using email id {}".format(email))
-        elif email is None and len(email_id) == 0:
-            sys.exit("Either pass an email or try geneutils init")
         dbdict = {"n": "nuccore", "p": "protein"}
         handle = Entrez.efetch(db=dbdict[db], id=idlist, retmode="xml")
         data = Entrez.parse(handle)
@@ -142,11 +145,11 @@ def accession_parse(path, db, email):
             print("Processed a total of {} records".format(i), end="\r")
             i = i + 1
         handle.close()
-        for annotated_rows in merge(row_list, acession_annotations):
-            with open(path.split(".")[0] + "_annotated.csv", "a") as csvfile:
-                writer = csv.writer(csvfile, delimiter=",", lineterminator="\n")
-                writer.writerow(annotated_rows)
-            csvfile.close()
+    for annotated_rows in merge(row_list, acession_annotations):
+        with open(path.split(".")[0] + "_annotated.csv", "a") as csvfile:
+            writer = csv.writer(csvfile, delimiter=",", lineterminator="\n")
+            writer.writerow(annotated_rows)
+        csvfile.close()
     print("")
     print("Annotated files written to {}".format(path.split(".")[0] + "_annotated.csv"))
 
@@ -197,3 +200,31 @@ def main(args=None):
 
 if __name__ == "__main__":
     main()
+
+
+# liners
+
+# insert -
+
+# chimney liner- utility chimneys
+
+# basement- no liner/ insert
+
+# liner
+
+
+# each
+
+
+# 3 liners
+# direct vent gas fireplace (power to each one ) and gas to eac one ()
+
+# wood fill liner
+
+# 124 sq inch
+
+# no need to parge insert
+
+
+
+
