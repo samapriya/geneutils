@@ -33,9 +33,74 @@ import sys
 import os
 import json
 import getpass
+import requests
+import pkg_resources
+import pandas as pd
 import argparse
+from bs4 import BeautifulSoup
 from os.path import expanduser
 from Bio import Entrez
+
+
+class Solution:
+    def compareVersion(self, version1, version2):
+        versions1 = [int(v) for v in version1.split(".")]
+        versions2 = [int(v) for v in version2.split(".")]
+        for i in range(max(len(versions1), len(versions2))):
+            v1 = versions1[i] if i < len(versions1) else 0
+            v2 = versions2[i] if i < len(versions2) else 0
+            if v1 > v2:
+                return 1
+            elif v1 < v2:
+                return -1
+        return 0
+
+
+ob1 = Solution()
+
+# Get package version
+def geneutils_version():
+    url = "https://pypi.org/project/geneutils/"
+    source = requests.get(url)
+    html_content = source.text
+    soup = BeautifulSoup(html_content, "html.parser")
+    company = soup.find("h1")
+    vcheck = ob1.compareVersion(
+        company.string.strip().split(" ")[-1],
+        pkg_resources.get_distribution("geneutils").version,
+    )
+    if vcheck == 1:
+        print(
+            "\n"
+            + "========================================================================="
+        )
+        print(
+            "Current version of geneutils is {} upgrade to lastest version: {}".format(
+                pkg_resources.get_distribution("geneutils").version,
+                company.string.strip().split(" ")[-1],
+            )
+        )
+        print(
+            "========================================================================="
+        )
+    elif vcheck == -1:
+        print(
+            "\n"
+            + "========================================================================="
+        )
+        print(
+            "Possibly running staging code {} compared to pypi release {}".format(
+                pkg_resources.get_distribution("geneutils").version,
+                company.string.strip().split(" ")[-1],
+            )
+        )
+        print(
+            "========================================================================="
+        )
+
+
+geneutils_version()
+
 
 accession_list = []
 row_list = []
@@ -85,6 +150,10 @@ def accession_parse(path, db, email):
                          "For the output of protein blast or blastx, use 'p'."]
         email {[type]} -- [NCBI email]
     """
+    # drop empty rows
+    df = pd.read_csv(path)
+    df.dropna(inplace=True)
+    df.to_csv(path, index=False)
 
     # get existing credentials
     if os.path.exists(os.path.join(expanduser("~"), "geneauth.json")):
@@ -97,7 +166,7 @@ def accession_parse(path, db, email):
         api_key = None
 
     n = 200
-    open(os.path.basename(path).split(".")[0] + "_annotated.csv", "w")
+    open(path.split(".")[0] + "_annotated.csv", "w")
     with open(path, encoding="utf-8-sig") as csvfile:
         reader = csv.reader(csvfile)
         for row in reader:
@@ -200,31 +269,3 @@ def main(args=None):
 
 if __name__ == "__main__":
     main()
-
-
-# liners
-
-# insert -
-
-# chimney liner- utility chimneys
-
-# basement- no liner/ insert
-
-# liner
-
-
-# each
-
-
-# 3 liners
-# direct vent gas fireplace (power to each one ) and gas to eac one ()
-
-# wood fill liner
-
-# 124 sq inch
-
-# no need to parge insert
-
-
-
-

@@ -94,9 +94,14 @@ The output is an annotated CSV file "*_annotated.csv" with the following columns
 
 ## Changelog
 
+### 0.0.5
+  - Fixed issue with empty rows
+  - Includes version check
+  - general code cleanup
+
 ### 0.0.4
   - Fixed issue with path basename
-  
+
 ### 0.0.3
   - Fixed issue with repeating email id for accession blocks
   - Updated ReadMe to include **geneutils init** as first step.
