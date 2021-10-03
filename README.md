@@ -94,6 +94,12 @@ The output is an annotated CSV file "*_annotated.csv" with the following columns
 
 ## Changelog
 
+### 0.0.6
+  - Dedupes accession ids & remove empty rows
+  - Subset handling is cleaner and better error handling with try except blocks
+  - general code improvements to run style and functionality
+  - performance improvements to overall runtime
+
 ### 0.0.5
   - Fixed issue with empty rows
   - Includes version check

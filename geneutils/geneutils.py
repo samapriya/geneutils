@@ -151,9 +151,12 @@ def accession_parse(path, db, email):
         email {[type]} -- [NCBI email]
     """
     # drop empty rows
-    df = pd.read_csv(path)
+    df = pd.read_csv(path, header=None, usecols=[1])
+    print("\n" + f"Total accession id(s): : {df.shape[0]}")
     df.dropna(inplace=True)
-    df.to_csv(path, index=False)
+    df.drop_duplicates(keep="first", inplace=True)
+    print(f"Total unique accession id(s): {df.shape[0]}")
+    df.to_csv(path.split(".")[0] + "_deduped.csv")
 
     # get existing credentials
     if os.path.exists(os.path.join(expanduser("~"), "geneauth.json")):
@@ -165,9 +168,9 @@ def accession_parse(path, db, email):
         email_id = None
         api_key = None
 
-    n = 200
+    n = 50
     open(path.split(".")[0] + "_annotated.csv", "w")
-    with open(path, encoding="utf-8-sig") as csvfile:
+    with open(path.split(".")[0] + "_deduped.csv") as csvfile:
         reader = csv.reader(csvfile)
         for row in reader:
             accession_list.append(row[1])
@@ -177,6 +180,7 @@ def accession_parse(path, db, email):
         for i in range((len(accession_list) + n - 1) // n)
     ]
     i = 1
+    length_accession_chunk = len(accession_chunk)
     if email is not None:
         Entrez.email = email
     elif email is None and email_id is not None:
@@ -184,41 +188,59 @@ def accession_parse(path, db, email):
     if api_key != "pass" and api_key is not None:
         Entrez.api_key = api_key
     if email is None and email_id is not None and api_key != "pass":
-        print("Using both email and api_key")
+        print(f"Using both email and api_key: {email_id}")
     elif email is not None:
         print("Using email id {}".format(email))
     elif email is None and email_id is None:
         sys.exit("Either pass an email or try geneutils init")
-    for subsets in accession_chunk:
-        idlist = ",".join(subsets)
-        dbdict = {"n": "nuccore", "p": "protein"}
-        handle = Entrez.efetch(db=dbdict[db], id=idlist, retmode="xml")
-        data = Entrez.parse(handle)
-        for items in data:
-            try:
-                version = items["GBSeq_accession-version"]
-                definition = items["GBSeq_definition"]
-                organism = items["GBSeq_organism"]
-                taxonomy = items["GBSeq_taxonomy"]
-                date = items["GBSeq_update-date"]
-                ref = ", ".join(items["GBSeq_references"][0]["GBReference_authors"])
-                acession_annotations.append([definition, organism, taxonomy, ref, date])
-            except Exception as e:
-                version = items["GBSeq_accession-version"]
-                definition = items["GBSeq_definition"]
-                organism = items["GBSeq_organism"]
-                taxonomy = items["GBSeq_taxonomy"]
-                date = items["GBSeq_update-date"]
-                ref = "No references found"
-                acession_annotations.append([definition, organism, taxonomy, ref, date])
-            print("Processed a total of {} records".format(i), end="\r")
-            i = i + 1
-        handle.close()
-    for annotated_rows in merge(row_list, acession_annotations):
-        with open(path.split(".")[0] + "_annotated.csv", "a") as csvfile:
-            writer = csv.writer(csvfile, delimiter=",", lineterminator="\n")
-            writer.writerow(annotated_rows)
-        csvfile.close()
+    for c, subsets in enumerate(accession_chunk, 1):
+        try:
+            idlist = ",".join(subsets)
+            # print(f'Processing {len(subsets)} accession id(s): ')
+            dbdict = {"n": "nuccore", "p": "protein"}
+            handle = Entrez.efetch(db=dbdict[db], id=idlist, retmode="xml")
+            data = Entrez.parse(handle)
+            for items in data:
+                # break
+                try:
+                    version = items["GBSeq_accession-version"]
+                    definition = items["GBSeq_definition"]
+                    organism = items["GBSeq_organism"]
+                    taxonomy = items["GBSeq_taxonomy"]
+                    date = items["GBSeq_update-date"]
+                    ref = ", ".join(items["GBSeq_references"][0]["GBReference_authors"])
+                    with open(path.split(".")[0] + "_annotated.csv", "a") as csvfile:
+                        writer = csv.writer(csvfile, delimiter=",", lineterminator="\n")
+                        writer.writerow(
+                            [version, definition, organism, taxonomy, ref, date]
+                        )
+                    csvfile.close()
+                except Exception as e:
+                    version = items["GBSeq_accession-version"]
+                    definition = items["GBSeq_definition"]
+                    organism = items["GBSeq_organism"]
+                    taxonomy = items["GBSeq_taxonomy"]
+                    date = items["GBSeq_update-date"]
+                    ref = "No references found"
+                    with open(path.split(".")[0] + "_annotated.csv", "a") as csvfile:
+                        writer = csv.writer(csvfile, delimiter=",", lineterminator="\n")
+                        writer.writerow(
+                            [version, definition, organism, taxonomy, ref, date]
+                        )
+                    csvfile.close()
+                except Exception:
+                    print(f"Encountered exception with subset {c}")
+                print(
+                    f"Processed a total of {i} records: Subset {c} of {length_accession_chunk}",
+                    end="\r",
+                )
+                i = i + 1
+            handle.close()
+        except Exception:
+            pass
+        except (KeyboardInterrupt, SystemExit) as e:
+            sys.exit("Program escaped by User")
+
     print("")
     print("Annotated files written to {}".format(path.split(".")[0] + "_annotated.csv"))
 
